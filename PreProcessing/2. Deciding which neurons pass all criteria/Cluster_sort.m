@@ -3,7 +3,6 @@ function [neuronIndex, parameters_OI, All] = Cluster_sort(All)
 
 %% Apply cluster quality filter based on L-Ratio treshold and ISI interval violation
 neuronIndex.ClustIx = 1:size(All{1,1},1);
-%neuronIndex.ClustIxBAD = [71 72 76 80 88 533 265 405 446 565 631 691 835 904 974 1086 1125 1217 1174 1282 635:680 ]; %indicate which neurons should be excludede from analysis
 neuronIndex.ClustIxBAD = [261 389 405 427 835 861 874 876 881 895 904 907 914 949 959 963 964 974 1003 1045 1060 1088 1103 1205 1217 1221 1225 1252 1254 1255 1260 1262 1264 1267 1278 1282 1372 1385 1438 1452 1453 1467,...
     4 71 72 76 88 135 242 254 446 473 480 492 498 533 558 563 565 582 593 657 667 679 691 753 810 1120 1123 1125 1144 1146 1147 1174 1176 1200 1298 1316 1343 1345];
 
@@ -14,19 +13,17 @@ parameters_OI.minSessionSALT = 1;
 parameters_OI.JitterTreshold = 3.5;
 parameters_OI.LatencyTreshold = 7;
 parameters_OI.ReliabilityTreshold = 0.031; %low firing units in baseline period tend to give false positives. Manual inspection seem to indicate...
-%that Reliability of 0.02 (10 spikes in 500 trials) is a good lower
+%that Reliability of 0.031 (~15 spikes in 500 trials) is a good lower
 %treshold.
 
-%neuronIndex.manualOIinspection = [983, 778, 1114]; %manually filter out false positive OI neurons
-%neuronIndex.manualOIinspection = [1295 1173]; %manually filter out false positive OI neurons
 neuronIndex.manualOIinspection = []; %manually filter out false positive OI neurons
 
 neuronIndex.manualOIinspectionInsert = [];
 
 % Indicate cluster criteria
-neuronIndex.LRtreshold = 1.5; % THIS CRITERIA DEPENDS ON AMOUNT OF SPIKES IN CLUSTER (IS RATIO OF THAT), CREATES BIAS TOWARDS BIG CLUSTERS, ONLY USE ID AND ISI% < 1.5ms
+neuronIndex.LRtreshold = 1.5;
 neuronIndex.IDtreshold = 40;
-neuronIndex.ISI15treshold = 0.25; %Percentage of neuron in ISI 1.5ms
+neuronIndex.ISI15treshold = 0.25; %Percentage of spikes in ISI <1.5ms
 
 %% END OF PARAMETERS
 
@@ -40,17 +37,14 @@ neuronIndex.ClustIx(neuronIndex.ClustIxBAD) = [];
 neuronIndex.Clust_All_reliable = neuronIndex.ClustIx;
 
         
-%% Find OI neurons based on the following: 5ms stim duration at 100% power, SALT p<0.01 and pearson's waveform corr. >=0.87
+%% Find OI neurons based on the following: minimally 75% light power, SALT p<0.01 and pearson's waveform corr. >=0.80
 neuronIndex.OIindex = [];
 neuronIndex.OIindexMaybe = [];
 
 for i = neuronIndex.ClustIx 
     lightIxs = find(All{1,1}{i,1}(:,3) < 0.01 & All{1,1}{i,1}(:,15)>= parameters_OI.PWCor & All{1,1}{i,1}(:,2)>= parameters_OI.minLightInt & All{1,1}{i,1}(:,6)>= parameters_OI.ReliabilityTreshold & All{1,1}{i,1}(:,4) < parameters_OI.LatencyTreshold & All{1,1}{i,1}(:,5) < parameters_OI.JitterTreshold);
-%     lightIxs = find(All{1,1}{i,1}(:,3) < 0.01 & All{1,1}{i,1}(:,2) == 100 & All{1,1}{i,1}(:,15)>= parameters_OI.PWCor);
     lightIxsMaybe = find(All{1,1}{i,1}(:,3) < 0.05 & All{1,1}{i,1}(:,3) >= 0.01 & All{1,1}{i,1}(:,15)>= parameters_OI.PWCor & All{1,1}{i,1}(:,2)>= parameters_OI.minLightInt & All{1,1}{i,1}(:,6)>= parameters_OI.ReliabilityTreshold & All{1,1}{i,1}(:,4) < parameters_OI.LatencyTreshold & All{1,1}{i,1}(:,5) < parameters_OI.JitterTreshold);
-    %lightIxsMaybe = find(All{1,1}{i,1}(:,3) < 0.01 & All{1,1}{i,1}(:,15)>= parameters_OI.PWCor & All{1,1}{i,1}(:,2)>= parameters_OI.minLightInt & All{1,1}{i,1}(:,6)< parameters_OI.ReliabilityTreshold & All{1,1}{i,1}(:,4) < parameters_OI.LatencyTreshold & All{1,1}{i,1}(:,5) < parameters_OI.JitterTreshold);
 
-    %[temp lightMaxWVCorIx] = max(All{1,1}{i,1}(lightIxs,3));
     if numel(lightIxs) >= parameters_OI.minSessionSALT && numel(find(All{24,1}{i,1}(lightIxs,5) == 1)) > 0
         neuronIndex.OIindex = [neuronIndex.OIindex i];
     end
@@ -68,33 +62,6 @@ neuronIndex.ClustIx = [neuronIndex.ClustIx neuronIndex.manualOIinspection];
 for i = neuronIndex.manualOIinspection
     neuronIndex.OIindex(find(neuronIndex.OIindex==i)) = [];
 end
-
-%% Filter out neurons that have too high latency and jitter
-% neuronIndex.OIindexAlmost = [];
-% for i = neuronIndex.OIindex
-%     SALTix = find(All{1,1}{i,1}(:,3) < 0.01 & All{1,1}{i,1}(:,15)>= parameters_OI.PWCor & All{1,1}{i,1}(:,2)>= parameters_OI.minLightInt & All{1,1}{i,1}(:,6)>= parameters_OI.ReliabilityTreshold);
-%     tempIx = find(All{1,1}{i,1}(SALTix,4)==min(All{1,1}{i,1}(SALTix,4)));
-%     if All{1,1}{i,1}(SALTix(tempIx),5) >= parameters_OI.JitterTreshold;
-%         neuronIndex.OIindexAlmost = [neuronIndex.OIindexAlmost i];
-%     elseif All{1,1}{i,1}(SALTix(tempIx),4) > parameters_OI.LatencyTreshold;
-%         neuronIndex.OIindexAlmost = [neuronIndex.OIindexAlmost i];
-%     end
-% end
-% 
-% for i = 1:length(neuronIndex.OIindexAlmost)
-%     neuronIndex.OIindex(find(neuronIndex.OIindex==neuronIndex.OIindexAlmost(i))) = [];
-% end
-% 
-% for i = 1:length(neuronIndex.OIindex)
-%     neuronIndex.ClustIx(find(neuronIndex.ClustIx==neuronIndex.OIindex(i))) = [];
-% end
-% 
-% neuronIndex.ClustIx = [neuronIndex.ClustIx neuronIndex.OIindexAlmost neuronIndex.manualOIinspection];
-% 
-% for i = neuronIndex.manualOIinspection
-%     neuronIndex.OIindex(find(neuronIndex.OIindex==i)) = [];
-% end
-
 
 %% Find cluster indexes for each behavioral condition (vITI, vSD and FIXED_ITI) for cluster with and without OI
 neuronIndex.vITIindex = [];
@@ -139,11 +106,8 @@ nSC = numel(SharedCovariance);
 d = 500;
 x1 = linspace(min(X(:,1)) - 2,max(X(:,1)) + 2,d);
 x2 = linspace(min(X(:,2)) - 2,max(X(:,2)) + 2,d);
-%x3 = linspace(min(X(:,3)) - 2,max(X(:,3)) + 2,d);
 [x1grid,x2grid] = meshgrid(x1,x2);
 X0 = [x1grid(:) x2grid(:)];
-% [x1grid,x2grid, x3grid] = meshgrid(x1,x2, x3);
-% X0 = [x1grid(:) x2grid(:) x3grid(:)];
 threshold = sqrt(chi2inv(0.99,2));
 options = statset('MaxIter',1000); % Increase number of EM iterations
 %figure;
@@ -154,23 +118,9 @@ for i = 1:nSigma;
         'SharedCovariance',SharedCovariance{j},'Options',options,'Replicates',10);
         clusterX = cluster(gmfit,X);
         mahalDist = mahal(gmfit,X0);
-        %subplot(2,2,c);
-        %h1 = gscatter3b(X(:,1),X(:,2),X(:,3),clusterX);
-        %gscatter3(X(:,1),X(:,2),X(:,3),clusterX);
-
-        %hold on;
-    for m = 1:k;
-        idx = mahalDist(:,m)<=threshold;
-        %Color = h1(m).Color*0.75 + -0.5*(h1(m).Color - 1);
-        %h2 = scatter3(X0(idx,1),X0(idx,2),X0(idx,3),'.','Color',Color,'MarkerSize',1);
-        %uistack(h2,'bottom');
-    end
-        %scatter3(gmfit.mu(:,1),gmfit.mu(:,2),gmfit.mu(:,3),'kx','LineWidth',2,'MarkerSize',10)
-        %title(sprintf('Sigma is %s, SharedCovariance = %s',...
-        %Sigma{i},SCtext{j}),'FontSize',8)
-        %legend(h1,{'1','2','3'});
-        %hold off
-        %c = c + 1;
+        for m = 1:k;
+            idx = mahalDist(:,m)<=threshold;
+        end
     end
 end
 P = posterior(gmfit,X);
@@ -197,10 +147,6 @@ neuronPos = neuronIndex.Clust_All_reliable';
 putneuronIndex.PyrIx = find(clusterX==pyrNr);
 putneuronIndex.IntIx = find(clusterX==intNr);
 putUnIDIx = find(clusterX==3);
-
-
-%[idx,C] = kmeans([All{15,1}(neuronIndex.Clust_All_reliable,5),All{15,1}(neuronIndex.Clust_All_reliable,6)],2);
-%neuronPos = neuronIndex.Clust_All_reliable';
 
 %NrOnes = size(find(idx==1),1);
 %NrTwos = size(find(idx==2),1);
@@ -230,7 +176,7 @@ neuronIndex.PyrIxVAR_SD = neuronIndex.vSDindex(find(ismember(neuronIndex.vSDinde
 neuronIndex.IntIxVAR_ITI = neuronIndex.vITIindex(find(ismember(neuronIndex.vITIindex, neuronIndex.IntIx)));
 neuronIndex.IntIxVAR_SD = neuronIndex.vSDindex(find(ismember(neuronIndex.vSDindex, neuronIndex.IntIx)));
 
-lat_jit_Rel_KTEST2 = waveformAnalysis(All, parameters_OI, neuronIndex, neuronIndex.IntIxVAR_ITI, neuronIndex.IntIxVAR_SD, neuronIndex.PyrIxVAR_ITI, neuronIndex.PyrIxVAR_SD, neuronIndex.PyrIx_VAR_ITI_OI, neuronIndex.PyrIx_VAR_SD_OI, neuronIndex.IntIxVAR_ITI_OI, neuronIndex.IntIxVAR_SD_OI);
+%lat_jit_Rel_KTEST2 = waveformAnalysis(All, parameters_OI, neuronIndex, neuronIndex.IntIxVAR_ITI, neuronIndex.IntIxVAR_SD, neuronIndex.PyrIxVAR_ITI, neuronIndex.PyrIxVAR_SD, neuronIndex.PyrIx_VAR_ITI_OI, neuronIndex.PyrIx_VAR_SD_OI, neuronIndex.IntIxVAR_ITI_OI, neuronIndex.IntIxVAR_SD_OI);
 
 % Plot plot cluster quality of all(none excluded yet) neurons and OI
 % neurons to show that cluster criteria are strict
@@ -259,18 +205,6 @@ scatter(All{3,1}(neuronIndex.OIindexTEMP(OI_qualityBad),1),All{3,1}(neuronIndex.
 line([neuronIndex.IDtreshold neuronIndex.IDtreshold], [0 0.3])
 line([0 300], [neuronIndex.ISI15treshold neuronIndex.ISI15treshold])
 legend({'Non-identified good quality','Non-identified bad quality','Identified good quality','Identified bad quality'})
-
-
-% figure
-% subplot(1,2,1)
-% for cluster2 = neuronIndex.Clust_All_reliable(find(idx == 2))
-%         scatter3(All{15,1}(cluster2,5), All{15,1}(cluster2,6), All{15,1}(cluster2,2),10,'b','filled')
-%         hold on
-% end
-% for cluster2 = neuronIndex.Clust_All_reliable(find(idx == 1))
-%     scatter3(All{15,1}(cluster2,5), All{15,1}(cluster2,6), All{15,1}(cluster2,2),10,'r','filled')
-%     hold on
-% end
 
 %% Find pairs of neurons that are possibly the same across VAR_ITI and VAR_SD sessions
 for neuron = 1:size(neuronIndex.ClustIxPyr,1)
