@@ -331,45 +331,6 @@ psthBinsValue.Cor.cue = binData(eventTimes.Cor.cue(TrialDistr.CorTresholdInclude
 psthBinsValue.Inc.cue = binData(eventTimes.Inc.cue(TrialDistr.IncTresholdIncluded), All{21, 1}{neuron, 1}, Cue_tBef, Cue_tAft, binSize);
 psthBinsValue.Om.cue = binData(eventTimes.Om.cue(TrialDistr.OmTresholdIncluded), All{21, 1}{neuron, 1}, Cue_tBef, Cue_tAft, binSize);
 
-
-
-%     %% Remove trials where animal went over treshold later than three seconds, passed the treshold again after first pass or had a lateral distance covered lower than 0.03 after treshold crossing
-%     switch trialFilter
-%         case 'yes' 
-%             try
-%                 PSTH.Cor_ThreeSecsIx = find(eventVideoBehavCor.treshold <= 3 & eventVideoBehavCor.tresholdSecondPass == 0 & eventVideoBehavCor.tresholdLateralDist >= 0.03);
-%             catch
-%                 PSTH.Cor_ThreeSecsIx = [];
-%             end
-%             try
-%                 PSTH.Prem_ThreeSecsIx = find(eventVideoBehavPrem.treshold <= 3 & eventVideoBehavPrem.tresholdSecondPass == 0 & eventVideoBehavPrem.tresholdLateralDist >= 0.03);
-%             catch
-%                 PSTH.Prem_ThreeSecsIx = [];
-%             end
-%                 PSTH.Cor_ThreeSecsIxRemoved = find(eventVideoBehavCor.treshold > 3 | eventVideoBehavCor.tresholdSecondPass == 1 | eventVideoBehavCor.tresholdLateralDist < 0.03);
-%             try
-%                 PSTH.Prem_ThreeSecsIxRemoved = find(eventVideoBehavPrem.treshold > 3 | eventVideoBehavPrem.tresholdSecondPass == 1 | eventVideoBehavPrem.tresholdLateralDist < 0.03);
-%             catch
-%                 PSTH.Prem_ThreeSecsIxRemoved = [];
-%             end
-%             %%
-% 
-%             psthBinsValue.Cor.trial_start = psthBinsValue.Cor.trial_start(PSTH.Cor_ThreeSecsIx,:);
-%             psthBinsValue.Prem.trial_start = psthBinsValue.Prem.trial_start(PSTH.Prem_ThreeSecsIx,:);
-%             psthBinsValue.Cor.wait_start = psthBinsValue.Cor.wait_start(PSTH.Cor_ThreeSecsIx,:);
-%             psthBinsValue.Prem.wait_start = psthBinsValue.Prem.wait_start(PSTH.Prem_ThreeSecsIx,:);
-%             psthBinsValue.Cor.resp = psthBinsValue.Cor.resp(PSTH.Cor_ThreeSecsIx,:);
-%             psthBinsValue.Prem.resp = psthBinsValue.Prem.resp(PSTH.Prem_ThreeSecsIx,:);
-% 
-%             eventTimes.Cor.trial_start = eventTimes.Cor.trial_start(PSTH.Cor_ThreeSecsIx);    
-%             eventTimes.Prem.trial_start = eventTimes.Prem.trial_start(PSTH.Prem_ThreeSecsIx);
-%             eventTimes.Cor.wait_start = eventTimes.Cor.wait_start(PSTH.Cor_ThreeSecsIx);
-%             eventTimes.Prem.wait_start = eventTimes.Prem.wait_start(PSTH.Prem_ThreeSecsIx);
-%             eventTimes.Cor.resp = eventTimes.Cor.resp(PSTH.Cor_ThreeSecsIx);
-%             eventTimes.Prem.resp = eventTimes.Prem.resp(PSTH.Prem_ThreeSecsIx);
-%         case 'no'
-%     end
-
 nans = numel(find(isnan(psthBinsValue.Cor.trial_start(:,1))));
 PSTH.Cor.trial_start = (nansum(psthBinsValue.Cor.trial_start,1)/(size(psthBinsValue.Cor.trial_start,1)-nans))*(1/binSize);
 nans = numel(find(isnan(psthBinsValue.Inc.trial_start(:,1))));
