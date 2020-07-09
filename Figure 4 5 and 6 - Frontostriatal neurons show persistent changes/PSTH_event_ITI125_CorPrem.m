@@ -1,13 +1,6 @@
 function [psthBinsValue, PSTH, TrialDistr] = PSTH_event_ITI125(All, neuronIndex, parameters_OI, neuron, binSize, event, InfoDist,varargin)
-%[psthBinsValue, PSTH, ID] = PSTH_event_ITI(All, neuronIndex, parameters_OI, neuron, binSize, event,varargin)
-% Function calculates the PSTHs, information distance measures, PSTH peaks
-% and does bootstrap randomization
-%
-% V1.0
-% h.terra@vu.nl
-% May 16th 2019 
-%
-%
+
+% Figure 6A and 6B
 
 
 [Correct, Incorrect, Omission, TrialDistr.Premature, Perserverative, nrTrialsStage, Perf]  = CC_ephys_var_ITI_SD_TTL_Master(10,1,All{5, 1}{neuron, 2});   
@@ -50,7 +43,6 @@ if strcmp(event,'All')
     eventVideoBehavPrem.treshold = zeros(1,Premature.TotalNr);
     eventVideoBehavPrem.tresholdSecondPass = zeros(1,Premature.TotalNr);
     eventVideoBehavPrem.tresholdLateralDist = zeros(1,Premature.TotalNr);
-
 
     eventVideoBehavCorITI50 = eventVideo(All, 'corITI50Cue', neuron, 0, 5.0,'PSTH_EVENT');
     eventVideoBehavCor.treshold(Correct.TrialPosITI50) = eventVideoBehavCorITI50.treshold;
@@ -277,11 +269,6 @@ elseif strcmp(event,'ITI125')
     end
 end
 
-
-%[eventTimes_afterCorrect, eventTimes_afterError] = eventFilter_previousType(All, neuron);
-%eventTimes.Cor.cue = eventTimes_afterCorrect;
-
-
 % Get binned values per trial
 psthBinsValue.Cor.trial_start = [];
 psthBinsValue.Inc.trial_start = [];
@@ -345,45 +332,6 @@ psthBinsValue.Cor.cue = binData(eventTimes.Cor.cue(TrialDistr.CorTresholdInclude
 psthBinsValue.Inc.cue = binData(eventTimes.Inc.cue(TrialDistr.IncTresholdIncluded), All{21, 1}{neuron, 1}, Cue_tBef, Cue_tAft, binSize);
 psthBinsValue.Om.cue = binData(eventTimes.Om.cue(TrialDistr.OmTresholdIncluded), All{21, 1}{neuron, 1}, Cue_tBef, Cue_tAft, binSize);
 
-
-
-%     %% Remove trials where animal went over treshold later than three seconds, passed the treshold again after first pass or had a lateral distance covered lower than 0.03 after treshold crossing
-%     switch trialFilter
-%         case 'yes' 
-%             try
-%                 PSTH.Cor_ThreeSecsIx = find(eventVideoBehavCor.treshold <= 3 & eventVideoBehavCor.tresholdSecondPass == 0 & eventVideoBehavCor.tresholdLateralDist >= 0.03);
-%             catch
-%                 PSTH.Cor_ThreeSecsIx = [];
-%             end
-%             try
-%                 PSTH.Prem_ThreeSecsIx = find(eventVideoBehavPrem.treshold <= 3 & eventVideoBehavPrem.tresholdSecondPass == 0 & eventVideoBehavPrem.tresholdLateralDist >= 0.03);
-%             catch
-%                 PSTH.Prem_ThreeSecsIx = [];
-%             end
-%                 PSTH.Cor_ThreeSecsIxRemoved = find(eventVideoBehavCor.treshold > 3 | eventVideoBehavCor.tresholdSecondPass == 1 | eventVideoBehavCor.tresholdLateralDist < 0.03);
-%             try
-%                 PSTH.Prem_ThreeSecsIxRemoved = find(eventVideoBehavPrem.treshold > 3 | eventVideoBehavPrem.tresholdSecondPass == 1 | eventVideoBehavPrem.tresholdLateralDist < 0.03);
-%             catch
-%                 PSTH.Prem_ThreeSecsIxRemoved = [];
-%             end
-%             %%
-% 
-%             psthBinsValue.Cor.trial_start = psthBinsValue.Cor.trial_start(PSTH.Cor_ThreeSecsIx,:);
-%             psthBinsValue.Prem.trial_start = psthBinsValue.Prem.trial_start(PSTH.Prem_ThreeSecsIx,:);
-%             psthBinsValue.Cor.wait_start = psthBinsValue.Cor.wait_start(PSTH.Cor_ThreeSecsIx,:);
-%             psthBinsValue.Prem.wait_start = psthBinsValue.Prem.wait_start(PSTH.Prem_ThreeSecsIx,:);
-%             psthBinsValue.Cor.resp = psthBinsValue.Cor.resp(PSTH.Cor_ThreeSecsIx,:);
-%             psthBinsValue.Prem.resp = psthBinsValue.Prem.resp(PSTH.Prem_ThreeSecsIx,:);
-% 
-%             eventTimes.Cor.trial_start = eventTimes.Cor.trial_start(PSTH.Cor_ThreeSecsIx);    
-%             eventTimes.Prem.trial_start = eventTimes.Prem.trial_start(PSTH.Prem_ThreeSecsIx);
-%             eventTimes.Cor.wait_start = eventTimes.Cor.wait_start(PSTH.Cor_ThreeSecsIx);
-%             eventTimes.Prem.wait_start = eventTimes.Prem.wait_start(PSTH.Prem_ThreeSecsIx);
-%             eventTimes.Cor.resp = eventTimes.Cor.resp(PSTH.Cor_ThreeSecsIx);
-%             eventTimes.Prem.resp = eventTimes.Prem.resp(PSTH.Prem_ThreeSecsIx);
-%         case 'no'
-%     end
-
 nans = numel(find(isnan(psthBinsValue.Cor.trial_start(:,1))));
 PSTH.Cor.trial_start = (nansum(psthBinsValue.Cor.trial_start,1)/(size(psthBinsValue.Cor.trial_start,1)-nans))*(1/binSize);
 nans = numel(find(isnan(psthBinsValue.Inc.trial_start(:,1))));
@@ -417,42 +365,6 @@ nans = numel(find(isnan(psthBinsValue.Inc.cue(:,1))));
 PSTH.Inc.cue = (nansum(psthBinsValue.Inc.cue,1)/(size(psthBinsValue.Inc.cue,1)-nans))*(1/binSize);
 nans = numel(find(isnan(psthBinsValue.Om.cue(:,1))));
 PSTH.Om.cue = (nansum(psthBinsValue.Om.cue,1)/(size(psthBinsValue.Om.cue,1)-nans))*(1/binSize);
-
-%% Median TRY OUT
-% nans = numel(find(isnan(psthBinsValue.Cor.trial_start(:,1))));
-% PSTH.Cor.trial_start = nanmedian(psthBinsValue.Cor.trial_start,1)*(1/binSize);
-% nans = numel(find(isnan(psthBinsValue.Inc.trial_start(:,1))));
-% PSTH.Inc.trial_start = nanmedian(psthBinsValue.Inc.trial_start,1)*(1/binSize);
-% nans = numel(find(isnan(psthBinsValue.Om.trial_start(:,1))));
-% PSTH.Om.trial_start = nanmedian(psthBinsValue.Om.trial_start,1)*(1/binSize);
-% nans = numel(find(isnan(psthBinsValue.Prem.trial_start(:,1))));
-% PSTH.Prem.trial_start = nanmedian(psthBinsValue.Prem.trial_start,1)*(1/binSize);
-% 
-% nans = numel(find(isnan(psthBinsValue.Cor.wait_start(:,1))));
-% PSTH.Cor.wait_start = nanmedian(psthBinsValue.Cor.wait_start,1)*(1/binSize);
-% nans = numel(find(isnan(psthBinsValue.Inc.wait_start(:,1))));
-% PSTH.Inc.wait_start = nanmedian(psthBinsValue.Inc.wait_start,1)*(1/binSize);
-% nans = numel(find(isnan(psthBinsValue.Om.wait_start(:,1))));
-% PSTH.Om.wait_start = nanmedian(psthBinsValue.Om.wait_start,1)*(1/binSize);
-% nans = numel(find(isnan(psthBinsValue.Prem.wait_start(:,1))));
-% PSTH.Prem.wait_start = nanmedian(psthBinsValue.Prem.wait_start,1)*(1/binSize);
-% 
-% nans = numel(find(isnan(psthBinsValue.Cor.resp(:,1))));
-% PSTH.Cor.resp = nanmedian(psthBinsValue.Cor.resp,1)*(1/binSize);
-% nans = numel(find(isnan(psthBinsValue.Inc.resp(:,1))));
-% PSTH.Inc.resp = nanmedian(psthBinsValue.Inc.resp,1)*(1/binSize);
-% nans = numel(find(isnan(psthBinsValue.Om.resp(:,1))));
-% PSTH.Om.resp = nanmedian(psthBinsValue.Om.resp,1)*(1/binSize);
-% nans = numel(find(isnan(psthBinsValue.Prem.resp(:,1))));
-% PSTH.Prem.resp = nanmedian(psthBinsValue.Prem.resp,1)*(1/binSize);
-% 
-% nans = numel(find(isnan(psthBinsValue.Cor.cue(:,1))));
-% PSTH.Cor.cue = nanmedian(psthBinsValue.Cor.cue,1)*(1/binSize);
-% nans = numel(find(isnan(psthBinsValue.Inc.cue(:,1))));
-% PSTH.Inc.cue = nanmedian(psthBinsValue.Inc.cue,1)*(1/binSize);
-% nans = numel(find(isnan(psthBinsValue.Om.cue(:,1))));
-% PSTH.Om.cue = nanmedian(psthBinsValue.Om.cue,1)*(1/binSize);
-%%
 
 %% Make PSTH from randomly shuffled event times and calculate peak and information distance
 switch InfoDist
@@ -560,29 +472,6 @@ switch InfoDist
                 PSTH.ID.(outcome{n}).(timePeriod{m}).Peak_PosOrNeg = 1;
             end
 
-%                 Do random analysis once and use that for multiple timePeriods.
-%                 Take over 500 random timepoints ('events'). DO NOT TAKE OVER 500
-%                 TRIALS EVERY TIME. RESPONSES WITH LOW AMOUNT OF TRIALS WILL
-%                 RESULT IN MORE NOISE FLUCTUATIONS AND THUS A HIGHER ID. THE NOISE
-%                 FLUCTIATIONS SHOULD BE DIVIDED OUT OF THE REAL_ID BY NORMALIZING.
-%                 WITH 500 TRIALS FOR RANDOMIZATION YOU REMOVE THE NOISE IN THE
-%                 RANDOM SAMPLES LEADING TO A HIGHER ID_RAND THAN SHOULD BE!!
-%             bootstraps = 1000;
-%             PSTH.ID.(outcome{n}).(timePeriod{m}).Peak_rand = zeros(1,bootstraps);
-%             PSTH.ID.(outcome{n}).(timePeriod{m}).ID_rand = zeros(1,bootstraps);
-%             for bStrap = 1:bootstraps
-%                 eventNr = size(psthBinsValue.(outcome{n}).(eventType),1);
-%                 randEventTimes = rand(1,eventNr)*All{22, 1}{neuron, 1}.CH11(end-1);
-%                 %randEventTimes = rand(1,size(psthBinsValue.(outcome{n}).(eventType),1))*All{22, 1}{neuron, 1}.CH11(end-1);
-%                 BinsValueRand = binData(randEventTimes, All{21, 1}{neuron, 1}, tBef, tAft, binSize);
-%                 PSTHRand = (nansum(BinsValueRand,1)/(size(BinsValueRand,1)-nans))*(1/binSize);
-%                 maxPeak = max(smoothdata(PSTHRand((tBef*BinsPerSec)-(PSTH.ID.(outcome{n}).(timePeriod{m}).tBef_ID*BinsPerSec):(tBef*BinsPerSec)+(PSTH.ID.(outcome{n}).(timePeriod{m}).tAft_ID*BinsPerSec))-All{15,1}(neuron,2),'gaussian',3));
-%                 minPeak = min(smoothdata(PSTHRand((tBef*BinsPerSec)-(PSTH.ID.(outcome{n}).(timePeriod{m}).tBef_ID*BinsPerSec):(tBef*BinsPerSec)+(PSTH.ID.(outcome{n}).(timePeriod{m}).tAft_ID*BinsPerSec))-All{15,1}(neuron,2),'gaussian',3));
-%                 PSTH.ID.(outcome{n}).(timePeriod{m}).Peak_rand(bStrap) = max(abs([minPeak maxPeak]));
-%                 PSTH.ID.(outcome{n}).(timePeriod{m}).ID_rand(bStrap) = InformDistance(FRmean, PSTHRand, tBef, PSTH.ID.(outcome{n}).(timePeriod{m}).tBef_ID, PSTH.ID.(outcome{n}).(timePeriod{m}).tAft_ID, binSize);
-%             end
-% 
-%             PSTH.ID.(outcome{n}).(timePeriod{m}).ID_norm = PSTH.ID.(outcome{n}).(timePeriod{m}).ID_real/abs(mean(PSTH.ID.(outcome{n}).(timePeriod{m}).ID_rand));
             end
             end
         end
@@ -590,11 +479,7 @@ switch InfoDist
 end
 
 
-%% Plot OI raster, bar graph, waveform
-%% Waveform shape with neuron in black, position in mPFC, ISI
-%% PSTH TS, TH, Cue
-%% raster TS, TH, Cue
-%% 
+%% Plotting
 
 if nargin
 for iEvent=1:size(varargin,2)
@@ -624,8 +509,6 @@ for iEvent=1:size(varargin,2)
                 eventArrayOI = 100;
             end            
 
-%                 [spt_test, spt_baseline, FSLatency, jitter, reliability, spt_spikeIx, baselineTimeArray] = binMakerSALT2(All, eventArrayOI, spikes);
-
             figure
 
                 dim = [0.7 0.15 0.3 0.3];
@@ -634,76 +517,7 @@ for iEvent=1:size(varargin,2)
                 sprintf('depth %g', All{11, 1}(neuron,1)), sprintf('animal %s', All{8, 1}{neuron,1}), sprintf('buddy %g', All{25, 1}(neuron,1)), sprintf('SALT_P %g', min(All{1, 1}{neuron,1}(:,3)))};
                 annotation('textbox',dim,'String',content,'FitBoxToText','on');
                 plotedit on
-            if numel(find(ismember(neuronIndex.OIindex,neuron))) % Plot OI waveform if OI neuron is indexed
-                tBefOI = 0.04;
-                tAftOI = 0.04;
-                subplot(3,4,1);
-                for i=1:numel(eventArrayOI)
-                    spnum=find(spikes>eventArrayOI(i)-tBefOI & spikes < eventArrayOI(i)+tAftOI);
-                    scatter(spikes(spnum)-eventArrayOI(i),repmat(i,numel(spnum),1)',1,'k','filled');
-                    hold on
-                end
-                axis([-tBefOI tAftOI 0 numel(eventArrayOI)])
-                title(sprintf('Light activation, %d ms, %d power', Stim.Dur(stimBlock), Stim.Power(stimBlock)));
-                ylabel('Trial')
-                xlabel('Time (ms)')
-
-                % get bins for binplot
-                binSizeOI = 0.001;
-                segmentSize = 80;
-
-                % Pre-allocate test and baseline matrix that are input for SALT test.
-                bins = zeros(length(eventArrayOI),segmentSize);
-
-                n=1;
-                for i = 1:length(eventArrayOI)
-                    bins(i,:) = histcounts(spikes,eventArrayOI(i)-tBefOI:binSizeOI:eventArrayOI(i)+tAftOI);
-                     %j = linspace(1,segmentSize,segmentSize);
-%                         for m = 1:length(j)
-%                             x = find(spikes>=((eventArrayOI(i)-tBefOI)+((j(m)-1)*binSizeOI)) & spikes<(eventArrayOI(i)-tBefOI)+((j(m)-1)*binSizeOI)+binSizeOI);
-
-%                             if ~isempty(x)
-%                                 bins(i,j(m))=1;
-%                                 n = n+1;
-%                                 break
-%                             end
-%                         end
-                end
-                bins = sum(bins,1)./500;
-
-                subplot(3,4,2);
-                %histogram(bins,numel(-tBefOI:binSizeOI:tAftOI))
-                bar(linspace(-40,40,80),bins,'FaceColor','black');
-                xlim([-40 40]);
-                xlabel('Time from light onset (ms)')
-                ylabel('Avg. Spikes bin^{-1}')
-            end
-
-            subplot(3,4,3);
-            hold on
-            xt = linspace(0,(60)/(30003.0003/1000),61);
-            shadedErrorBar(xt,All{13, 1}(neuron,45:105),All{14, 1}(neuron,45:105),{'k'});
-            if numel(find(ismember(neuronIndex.OIindex,neuron))) % Plot OI waveform if OI neuron is indexed
-                    try
-                        avgWFOICor = All{16, 1}{neuron,stimBlock}(1,45:105);
-                    catch
-                        avgWFOICor = All{13, 1}(neuron,45:105);
-                    end
-                plot(xt, avgWFOICor,'b','linewidth',2)
-            end
-            ylabel('Amplitude (uV)')
-            xlabel('time (ms)')
-            title(sprintf('neuron %d', neuron));
-
-            subplot(3,4,4)
-            spikeIntervals = diff(All{21,1}{neuron,1}(1:All{3, 1}(neuron,3)))*1000;
-            binSize_hist = 1;                                            % 1 ms bins
-            x = [0:binSize_hist:50];
-            histogram(spikeIntervals,x,'FaceColor','black')
-            ylabel('Count')
-            xlabel('ISI (ms)')
-            xlim([0 50])
-
+            
             % Get timeaxis for PSTH
             time_axis_Treshold = round(linspace(-Treshold_tBef+(binSize),Treshold_tAft,((Treshold_tBef+Treshold_tAft)/binSize)),1);
             time_axis_TrialStart = round(linspace(-TrialStart_tBef+(binSize),TrialStart_tAft,((TrialStart_tBef+TrialStart_tAft)/binSize)),1);
@@ -819,13 +633,6 @@ for iEvent=1:size(varargin,2)
             ylabel('Trial')
             xlabel('time (sec)')
 
-
-            %formatSpec = 'VARSD_all_neuron%d.fig';
-            %str = sprintf(formatSpec, neuron);
-            %savefig(str)
-            %print(str,'-deps','-painters')
-            %movefile (str, 'var_SD_all');
-            %close
     end
 end
 end
