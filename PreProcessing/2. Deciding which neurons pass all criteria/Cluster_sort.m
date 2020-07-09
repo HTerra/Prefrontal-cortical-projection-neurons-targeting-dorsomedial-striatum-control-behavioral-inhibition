@@ -1,5 +1,6 @@
 function [neuronIndex, parameters_OI, All] = Cluster_sort(All)
-% Sort the clusters based on INT, Pyr, SALT and sorting quality
+% Apply cluster quality metrics per neuron, optogenetic identification criteria per neuron and seperate in broad-spiking, narrow-spiking and unclassified.
+% ALso puts distance from pia per neuron in master struct "All"
 
 %% Apply cluster quality filter based on L-Ratio treshold and ISI interval violation
 neuronIndex.ClustIx = 1:size(All{1,1},1);
@@ -7,11 +8,11 @@ neuronIndex.ClustIxBAD = [261 389 405 427 835 861 874 876 881 895 904 907 914 94
     4 71 72 76 88 135 242 254 446 473 480 492 498 533 558 563 565 582 593 657 667 679 691 753 810 1120 1123 1125 1144 1146 1147 1174 1176 1200 1298 1316 1343 1345];
 
 % Indicate OI criteria
-parameters_OI.PWCor = 0.80;
-parameters_OI.minLightInt = 75;
-parameters_OI.minSessionSALT = 1;
-parameters_OI.JitterTreshold = 3.5;
-parameters_OI.LatencyTreshold = 7;
+parameters_OI.PWCor = 0.80; %Minimal pearon's waveform correlation
+parameters_OI.minLightInt = 75; %Minimal laser power requried for optogenetic identification
+parameters_OI.minSessionSALT = 1; %Minimal significant SALT sessions per neuron before being accepted
+parameters_OI.JitterTreshold = 3.5; %Maximal first spike jitter threshold
+parameters_OI.LatencyTreshold = 7; %Maximal first spike altency threshold
 parameters_OI.ReliabilityTreshold = 0.031; %low firing units in baseline period tend to give false positives. Manual inspection seem to indicate...
 %that Reliability of 0.031 (~15 spikes in 500 trials) is a good lower
 %treshold.
@@ -188,23 +189,6 @@ for i = 1:size(All{1,1},1)
         neuronIndex.OIindexTEMP = [neuronIndex.OIindexTEMP i];
     end
 end
-
-figure
-hold on
-All_qualityGood = find(All{3,1}(:,1)>=neuronIndex.IDtreshold & All{3,1}(:,7) <= neuronIndex.ISI15treshold & All{3,1}(:,2) <= neuronIndex.LRtreshold);
-All_qualityBad = find(All{3,1}(:,1)< neuronIndex.IDtreshold | All{3,1}(:,7) > neuronIndex.ISI15treshold & All{3,1}(:,2) > neuronIndex.LRtreshold);
-scatter(All{3,1}(All_qualityGood,1),All{3,1}(All_qualityGood,7),8,'b','filled')
-scatter(All{3,1}(All_qualityBad,1),All{3,1}(All_qualityBad,7),8,'b','filled','MarkerFaceAlpha',0.3)
-xlabel('Isolation Distance')
-ylabel('% Spikes with ISI < 1.5ms')
-%zlabel('ISI <1.5 ms (%)')
-OI_qualityGood = find(All{3,1}(neuronIndex.OIindexTEMP,1)>=neuronIndex.IDtreshold & All{3,1}(neuronIndex.OIindexTEMP,7) <= neuronIndex.ISI15treshold & All{3,1}(neuronIndex.OIindexTEMP,2) <= neuronIndex.LRtreshold);
-OI_qualityBad = find(All{3,1}(neuronIndex.OIindexTEMP,1)< neuronIndex.IDtreshold | All{3,1}(neuronIndex.OIindexTEMP,7) > neuronIndex.ISI15treshold & All{3,1}(neuronIndex.OIindexTEMP,2) > neuronIndex.LRtreshold);
-scatter(All{3,1}(neuronIndex.OIindexTEMP(OI_qualityGood),1),All{3,1}(neuronIndex.OIindexTEMP(OI_qualityGood),7),8,'r','filled')
-scatter(All{3,1}(neuronIndex.OIindexTEMP(OI_qualityBad),1),All{3,1}(neuronIndex.OIindexTEMP(OI_qualityBad),7),8,'r','filled','MarkerFaceAlpha',0.3)
-line([neuronIndex.IDtreshold neuronIndex.IDtreshold], [0 0.3])
-line([0 300], [neuronIndex.ISI15treshold neuronIndex.ISI15treshold])
-legend({'Non-identified good quality','Non-identified bad quality','Identified good quality','Identified bad quality'})
 
 %% Find pairs of neurons that are possibly the same across VAR_ITI and VAR_SD sessions
 for neuron = 1:size(neuronIndex.ClustIxPyr,1)
