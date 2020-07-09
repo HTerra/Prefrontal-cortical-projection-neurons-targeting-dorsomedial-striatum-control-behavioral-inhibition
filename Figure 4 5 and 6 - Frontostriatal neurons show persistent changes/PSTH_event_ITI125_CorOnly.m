@@ -1,8 +1,9 @@
-function [psthBinsValue, PSTH, TrialDistr] = PSTH_event_ITI125_CorOnly(All, neuronIndex, parameters_OI, neuron, binSize, event, InfoDist,varargin)
-%[psthBinsValue, PSTH, ID] = PSTH_event_ITI(All, neuronIndex, parameters_OI, neuron, binSize, event,varargin)
-% Function calculates the PSTHs, information distance measures, PSTH peaks
-% and does bootstrap randomization
-%
+function [psthBinsValue, PSTH, TrialDistr] = PSTH_event_CorOnly(All, neuronIndex, parameters_OI, neuron, binSize, event, InfoDist,varargin)
+
+% Figure 3A
+% Figure 4A, 4B, 4C and 4D
+% Figure S1
+
 % V1.0
 % h.terra@vu.nl
 % May 16th 2019 
@@ -50,7 +51,6 @@ if strcmp(event,'All')
     eventVideoBehavPrem.treshold = zeros(1,Premature.TotalNr);
     eventVideoBehavPrem.tresholdSecondPass = zeros(1,Premature.TotalNr);
     eventVideoBehavPrem.tresholdLateralDist = zeros(1,Premature.TotalNr);
-
 
     eventVideoBehavCorITI50 = eventVideo(All, 'corITI50Cue', neuron, 0, 5.0,'PSTH_EVENT');
     eventVideoBehavCor.treshold(Correct.TrialPosITI50) = eventVideoBehavCorITI50.treshold;
@@ -124,7 +124,6 @@ if strcmp(event,'All')
     eventTimes.Om.wait_start = eventTimes.Om.trial_start+eventVideoBehavOm.treshold;
     try
         eventTimes.Prem.wait_start = eventTimes.Prem.trial_start+eventVideoBehavPrem.treshold;
-
     catch
         eventTimes.Prem.wait_start = [];
     end
@@ -164,7 +163,7 @@ elseif strcmp(event,'ITI50')
     Treshold_tAft = 5;
     Response_tAft = 4;
     
-        eventTimes.Cor.wait_start = eventTimes.Cor.trial_start+eventVideoBehavCor.treshold';
+    eventTimes.Cor.wait_start = eventTimes.Cor.trial_start+eventVideoBehavCor.treshold';
     eventTimes.Inc.wait_start = eventTimes.Inc.trial_start+eventVideoBehavInc.treshold';
     eventTimes.Om.wait_start = eventTimes.Om.trial_start+eventVideoBehavOm.treshold';
     try
@@ -255,12 +254,11 @@ elseif strcmp(event,'ITI125')
     Treshold_tAft = 13;
     Response_tAft = 4;
     
-        eventTimes.Cor.wait_start = eventTimes.Cor.trial_start+eventVideoBehavCor.treshold';
+    eventTimes.Cor.wait_start = eventTimes.Cor.trial_start+eventVideoBehavCor.treshold';
     eventTimes.Inc.wait_start = eventTimes.Inc.trial_start+eventVideoBehavInc.treshold';
     eventTimes.Om.wait_start = eventTimes.Om.trial_start+eventVideoBehavOm.treshold';
     try
         eventTimes.Prem.wait_start = eventTimes.Prem.trial_start+eventVideoBehavPrem.treshold';
-
     catch
         eventTimes.Prem.wait_start = [];
     end
@@ -276,11 +274,6 @@ elseif strcmp(event,'ITI125')
         eventTimes.Prem.resp = [];
     end
 end
-
-
-%[eventTimes_afterCorrect, eventTimes_afterError] = eventFilter_previousType(All, neuron);
-%eventTimes.Cor.cue = eventTimes_afterCorrect;
-
 
 % Get binned values per trial
 psthBinsValue.Cor.trial_start = [];
@@ -344,45 +337,6 @@ psthBinsValue.Om.resp = binData(eventTimes.Om.resp(TrialDistr.OmTresholdIncluded
 psthBinsValue.Cor.cue = binData(eventTimes.Cor.cue(TrialDistr.CorTresholdIncluded), All{21, 1}{neuron, 1}, Cue_tBef, Cue_tAft, binSize);
 psthBinsValue.Inc.cue = binData(eventTimes.Inc.cue(TrialDistr.IncTresholdIncluded), All{21, 1}{neuron, 1}, Cue_tBef, Cue_tAft, binSize);
 psthBinsValue.Om.cue = binData(eventTimes.Om.cue(TrialDistr.OmTresholdIncluded), All{21, 1}{neuron, 1}, Cue_tBef, Cue_tAft, binSize);
-
-
-
-%     %% Remove trials where animal went over treshold later than three seconds, passed the treshold again after first pass or had a lateral distance covered lower than 0.03 after treshold crossing
-%     switch trialFilter
-%         case 'yes' 
-%             try
-%                 PSTH.Cor_ThreeSecsIx = find(eventVideoBehavCor.treshold <= 3 & eventVideoBehavCor.tresholdSecondPass == 0 & eventVideoBehavCor.tresholdLateralDist >= 0.03);
-%             catch
-%                 PSTH.Cor_ThreeSecsIx = [];
-%             end
-%             try
-%                 PSTH.Prem_ThreeSecsIx = find(eventVideoBehavPrem.treshold <= 3 & eventVideoBehavPrem.tresholdSecondPass == 0 & eventVideoBehavPrem.tresholdLateralDist >= 0.03);
-%             catch
-%                 PSTH.Prem_ThreeSecsIx = [];
-%             end
-%                 PSTH.Cor_ThreeSecsIxRemoved = find(eventVideoBehavCor.treshold > 3 | eventVideoBehavCor.tresholdSecondPass == 1 | eventVideoBehavCor.tresholdLateralDist < 0.03);
-%             try
-%                 PSTH.Prem_ThreeSecsIxRemoved = find(eventVideoBehavPrem.treshold > 3 | eventVideoBehavPrem.tresholdSecondPass == 1 | eventVideoBehavPrem.tresholdLateralDist < 0.03);
-%             catch
-%                 PSTH.Prem_ThreeSecsIxRemoved = [];
-%             end
-%             %%
-% 
-%             psthBinsValue.Cor.trial_start = psthBinsValue.Cor.trial_start(PSTH.Cor_ThreeSecsIx,:);
-%             psthBinsValue.Prem.trial_start = psthBinsValue.Prem.trial_start(PSTH.Prem_ThreeSecsIx,:);
-%             psthBinsValue.Cor.wait_start = psthBinsValue.Cor.wait_start(PSTH.Cor_ThreeSecsIx,:);
-%             psthBinsValue.Prem.wait_start = psthBinsValue.Prem.wait_start(PSTH.Prem_ThreeSecsIx,:);
-%             psthBinsValue.Cor.resp = psthBinsValue.Cor.resp(PSTH.Cor_ThreeSecsIx,:);
-%             psthBinsValue.Prem.resp = psthBinsValue.Prem.resp(PSTH.Prem_ThreeSecsIx,:);
-% 
-%             eventTimes.Cor.trial_start = eventTimes.Cor.trial_start(PSTH.Cor_ThreeSecsIx);    
-%             eventTimes.Prem.trial_start = eventTimes.Prem.trial_start(PSTH.Prem_ThreeSecsIx);
-%             eventTimes.Cor.wait_start = eventTimes.Cor.wait_start(PSTH.Cor_ThreeSecsIx);
-%             eventTimes.Prem.wait_start = eventTimes.Prem.wait_start(PSTH.Prem_ThreeSecsIx);
-%             eventTimes.Cor.resp = eventTimes.Cor.resp(PSTH.Cor_ThreeSecsIx);
-%             eventTimes.Prem.resp = eventTimes.Prem.resp(PSTH.Prem_ThreeSecsIx);
-%         case 'no'
-%     end
 
 nans = numel(find(isnan(psthBinsValue.Cor.trial_start(:,1))));
 PSTH.Cor.trial_start = (nansum(psthBinsValue.Cor.trial_start,1)/(size(psthBinsValue.Cor.trial_start,1)-nans))*(1/binSize);
@@ -525,12 +479,7 @@ switch InfoDist
             end
 
 %                 Do random analysis once and use that for multiple timePeriods.
-%                 Take over 500 random timepoints ('events'). DO NOT TAKE OVER 500
-%                 TRIALS EVERY TIME. RESPONSES WITH LOW AMOUNT OF TRIALS WILL
-%                 RESULT IN MORE NOISE FLUCTUATIONS AND THUS A HIGHER ID. THE NOISE
-%                 FLUCTIATIONS SHOULD BE DIVIDED OUT OF THE REAL_ID BY NORMALIZING.
-%                 WITH 500 TRIALS FOR RANDOMIZATION YOU REMOVE THE NOISE IN THE
-%                 RANDOM SAMPLES LEADING TO A HIGHER ID_RAND THAN SHOULD BE!!
+%                 Take over 500 random timepoints ('events').
             bootstraps = 1000;
             PSTH.ID.(outcome{n}).(timePeriod{m}).Peak_rand = zeros(1,bootstraps);
             PSTH.ID.(outcome{n}).(timePeriod{m}).ID_rand = zeros(1,bootstraps);
@@ -554,11 +503,7 @@ switch InfoDist
 end
 
 
-%% Plot OI raster, bar graph, waveform
-%% Waveform shape with neuron in black, position in mPFC, ISI
-%% PSTH TS, TH, Cue
-%% raster TS, TH, Cue
-%% 
+%% Plotting
 
 if nargin
 for iEvent=1:size(varargin,2)
@@ -573,9 +518,6 @@ for iEvent=1:size(varargin,2)
                 Stim.Nr = [Stim.Nr 500];
             end
 
-%             lightIxs = find(All{1,1}{neuron,1}(:,3) < 0.01 & All{1,1}{neuron,1}(:,15)>= parameters_OI.PWCor & All{1,1}{neuron,1}(:,2)>= parameters_OI.minLightInt & All{1,1}{neuron,1}(:,6)>= parameters_OI.ReliabilityTreshold);                %stimBlocksPower = find(All{1,1}{neuron,1}(lightIxs,2) == 100 | All{1,1}{neuron,1}(lightIxs,2) == 75);
-%             [~, stimBlocksDur] = max(All{1,1}{neuron,1}(lightIxs,1));
-%             stimBlock = lightIxs(stimBlocksDur);
             stimBlock = 1;
 
             if stimBlock == 1
@@ -589,17 +531,13 @@ for iEvent=1:size(varargin,2)
                 eventArrayOI = 100;
             end            
 
-%                 [spt_test, spt_baseline, FSLatency, jitter, reliability, spt_spikeIx, baselineTimeArray] = binMakerSALT2(All, eventArrayOI, spikes);
-
             figure
-
                 dim = [0.7 0.15 0.3 0.3];
                 content = {sprintf('Avg Spikes s^{-1} = %g',All{15,1}(neuron,2)), sprintf('ID %g', All{3, 1}(neuron,1)), sprintf('L-ratio %g', All{3, 1}(neuron,2)), sprintf('ISI1.5 %g',...
                 All{3, 1}(neuron,7)), sprintf('session dur (hour) %g', All{22, 1}{neuron, 1}.corResp(end)/3600), sprintf('shank %g', All{4, 1}(neuron,1)),...
                 sprintf('depth %g', All{11, 1}(neuron,1)), sprintf('animal %s', All{8, 1}{neuron,1}), sprintf('buddy %g', All{25, 1}(neuron,1)), sprintf('SALT_P %g', min(All{1, 1}{neuron,1}(:,3)))};
                 annotation('textbox',dim,'String',content,'FitBoxToText','on');
                 plotedit on
-            %if numel(find(ismember(neuronIndex.OIindex,neuron))) % Plot OI waveform if OI neuron is indexed
                 tBefOI = 0.04;
                 tAftOI = 0.04;
                 subplot(3,4,1);
@@ -623,26 +561,14 @@ for iEvent=1:size(varargin,2)
                 n=1;
                 for i = 1:length(eventArrayOI)
                     bins(i,:) = histcounts(spikes,eventArrayOI(i)-tBefOI:binSizeOI:eventArrayOI(i)+tAftOI);
-                     %j = linspace(1,segmentSize,segmentSize);
-%                         for m = 1:length(j)
-%                             x = find(spikes>=((eventArrayOI(i)-tBefOI)+((j(m)-1)*binSizeOI)) & spikes<(eventArrayOI(i)-tBefOI)+((j(m)-1)*binSizeOI)+binSizeOI);
-
-%                             if ~isempty(x)
-%                                 bins(i,j(m))=1;
-%                                 n = n+1;
-%                                 break
-%                             end
-%                         end
                 end
                 bins = sum(bins,1)./500;
 
                 subplot(3,4,2);
-                %histogram(bins,numel(-tBefOI:binSizeOI:tAftOI))
                 bar(linspace(-40,40,80),bins,'FaceColor','black');
                 xlim([-40 40]);
                 xlabel('Time from light onset (ms)')
                 ylabel('Avg. Spikes bin^{-1}')
-            %end
 
             subplot(3,4,3);
             hold on
@@ -679,8 +605,6 @@ for iEvent=1:size(varargin,2)
             hold on
             SEM = nanstd(psthBinsValue.Cor.trial_start,1)/sqrt(size(psthBinsValue.Cor.trial_start,1)); 
             shadedErrorBar(time_axis_TrialStart,smooth(PSTH.Cor.trial_start,3),SEM,{'k'});
-            %SEM = nanstd(psthBinsValue.Prem.trial_start,1)/sqrt(size(psthBinsValue.Prem.trial_start,1)); 
-            %shadedErrorBar(time_axis_TrialStart,PSTH.Prem.trial_start,SEM,{'c'});
             line([-TrialStart_tBef TrialStart_tAft],[mean(PSTH.Cor.trial_start(1:10)) mean(PSTH.Cor.trial_start(1:10))])
             axis([-TrialStart_tBef TrialStart_tAft 0 inf])
 
@@ -688,25 +612,19 @@ for iEvent=1:size(varargin,2)
             hold on
             SEM = nanstd(psthBinsValue.Cor.wait_start,1)/sqrt(size(psthBinsValue.Cor.wait_start,1)); 
             shadedErrorBar(time_axis_Treshold,smooth(PSTH.Cor.wait_start,3),SEM,{'k'});
-            
-            %SEM = nanstd(psthBinsValue.Prem.wait_start,1)/sqrt(size(psthBinsValue.Prem.wait_start,1)); 
-            %shadedErrorBar(time_axis_Treshold,PSTH.Prem.wait_start,SEM,{'c'});
+
             axis([-Treshold_tBef Treshold_tAft 0 inf])
 
             subplot(3,4,7)
             hold on
             SEM = nanstd(psthBinsValue.Cor.cue,1)/sqrt(size(psthBinsValue.Cor.cue,1)); 
             shadedErrorBar(time_axis_Cue,smooth(PSTH.Cor.cue,3),SEM,{'k'});
-            %SEM = nanstd(psthBinsValue.Prem.resp(:,1:20),1)/sqrt(size(psthBinsValue.Prem.resp(:,1:20),1)); 
-            %shadedErrorBar(time_axis_Cue,PSTH.Prem.resp(:,1:20),SEM,{'c'});
             axis([-Cue_tBef Cue_tAft 0 inf])
 
             subplot(3,4,8)
             hold on
             SEM = nanstd(psthBinsValue.Cor.resp,1)/sqrt(size(psthBinsValue.Cor.resp,1)); 
             shadedErrorBar(time_axis_Response,smooth(PSTH.Cor.resp,3),SEM,{'k'});
-            %SEM = nanstd(psthBinsValue.Prem.resp,1)/sqrt(size(psthBinsValue.Prem.resp,1)); 
-            %shadedErrorBar(time_axis_Response,PSTH.Prem.resp,SEM,{'c'});
             axis([-Response_tBef Response_tAft 0 inf])
             
             dotSize = 0.1;
@@ -721,12 +639,7 @@ for iEvent=1:size(varargin,2)
 
                 n = n+1;
             end
-%             for i=1:numel(TrialDistr.PremTresholdIncluded)
-%                 spnum=find(All{21, 1}{neuron, 1}>eventTimes.Prem.trial_start(TrialDistr.PremTresholdIncluded(i))-TrialStart_tBef & All{21, 1}{neuron, 1} < eventTimes.Prem.trial_start(TrialDistr.PremTresholdIncluded(i))+TrialStart_tAft);
-%                 scatter(All{21, 1}{neuron, 1}(spnum)-eventTimes.Prem.trial_start(TrialDistr.PremTresholdIncluded(i)),repmat(n,numel(spnum),1)',dotSize,[0.8500 0.3250 0.0980],'filled');
-%                 scatter(eventVideoBehavPrem.treshold(i),repmat(n,numel(1),1)',dotSize*2,'m','filled');
-%                 n = n+1;
-%             end
+
             axis([-TrialStart_tBef TrialStart_tAft 1 numel(TrialDistr.CorTresholdIncluded)])
             ylabel('Trial')
             xlabel('time (sec)')
@@ -739,11 +652,7 @@ for iEvent=1:size(varargin,2)
                 scatter(All{21, 1}{neuron, 1}(spnum)-eventTimes.Cor.wait_start(TrialDistr.CorTresholdIncluded(i)),repmat(n,numel(spnum),1)',dotSize,'k','filled');
                 n = n+1;
             end
-%             for i=1:numel(TrialDistr.PremTresholdIncluded)
-%                 spnum=find(All{21, 1}{neuron, 1}>eventTimes.Prem.wait_start(TrialDistr.PremTresholdIncluded(i))-Treshold_tBef & All{21, 1}{neuron, 1} < eventTimes.Prem.wait_start(TrialDistr.PremTresholdIncluded(i))+Treshold_tAft);
-%                 scatter(All{21, 1}{neuron, 1}(spnum)-eventTimes.Prem.wait_start(TrialDistr.PremTresholdIncluded(i)),repmat(n,numel(spnum),1)',dotSize,[0.8500 0.3250 0.0980],'filled');
-%                 n = n+1;
-%             end
+
             axis([-Treshold_tBef Treshold_tAft 1 numel(TrialDistr.CorTresholdIncluded)])
             ylabel('Trial')
             xlabel('time (sec)')
@@ -756,11 +665,7 @@ for iEvent=1:size(varargin,2)
                 scatter(All{21, 1}{neuron, 1}(spnum)-eventTimes.Cor.cue(i),repmat(n,numel(spnum),1)',dotSize,'k','filled');
                 n = n+1;
             end
-%             for i=1:numel(eventTimes.Prem.resp)
-%                 spnum=find(All{21, 1}{neuron, 1}>eventTimes.Prem.resp(i)-Response_tBef & All{21, 1}{neuron, 1} < eventTimes.Prem.resp(i)+Response_tAft);
-%                 scatter(All{21, 1}{neuron, 1}(spnum)-eventTimes.Prem.resp(i),repmat(n,numel(spnum),1)',dotSize,[0.8500 0.3250 0.0980],'filled');
-%                 n = n+1;
-%             end
+
             axis([-Response_tBef Response_tAft 1 numel([eventTimes.Cor.cue])])
             ylabel('Trial')
             xlabel('time (sec)')
@@ -773,22 +678,10 @@ for iEvent=1:size(varargin,2)
                 scatter(All{21, 1}{neuron, 1}(spnum)-eventTimes.Cor.resp(TrialDistr.CorTresholdIncluded(i)),repmat(n,numel(spnum),1)',dotSize,'k','filled');
                 n = n+1;
             end
-%             for i=1:numel(TrialDistr.PremTresholdIncluded)
-%                 spnum=find(All{21, 1}{neuron, 1}>eventTimes.Prem.resp(TrialDistr.PremTresholdIncluded(i))-Response_tBef & All{21, 1}{neuron, 1} < eventTimes.Prem.resp(TrialDistr.PremTresholdIncluded(i))+Response_tAft);
-%                 scatter(All{21, 1}{neuron, 1}(spnum)-eventTimes.Prem.resp(TrialDistr.PremTresholdIncluded(i)),repmat(n,numel(spnum),1)',dotSize,[0.8500 0.3250 0.0980],'filled');
-%                 n = n+1;
-%             end
+
             axis([-Response_tBef Response_tAft 1 numel(TrialDistr.CorTresholdIncluded)])
             ylabel('Trial')
             xlabel('time (sec)')
-
-
-            %formatSpec = 'VARSD_all_neuron%d.fig';
-            %str = sprintf(formatSpec, neuron);
-            %savefig(str)
-            %print(str,'-deps','-painters')
-            %movefile (str, 'var_SD_all');
-            %close
     end
 end
 end
