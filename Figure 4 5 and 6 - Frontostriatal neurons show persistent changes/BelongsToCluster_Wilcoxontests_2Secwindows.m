@@ -1,5 +1,7 @@
 function [ClustType, All, Clust_ord] = BelongsToCluster_Wilcoxontests_2Secwindows(All, ITI_All, ITI_OI, neuronIndex, parameters_OI, SD_All, SD_OI)
-%function [ClustType, PSTH_PCA, Chi_All, Chi_SD, Chi_ITI, tbl_All, tbl_SD, tbl_ITI, All, Clust_ord] = BelongsToCluster_CueOrientation(All, ITI_All, ITI_OI, neuronIndex, parameters_OI, SD_All, SD_OI)
+
+% Function calculates if neurons are acivated, silenced or unchanged in time windows, after trial start, after cue orientation and before the cue.
+% Significance is calculated with a Wilcoxon signed-rank test compared to a 2 sec baseline period.
 
 
 % Does not exclude neurons with buddy. Does exclude sessions without OI
@@ -54,7 +56,6 @@ Type.Cue = [];
 Type.Resp = [];
 trialTypo = {'TS','TH','Cue','Resp','Resp'};
 trialTypo2 = {'TS','TH','Cue','Resp','Resp_bef'};
-%timeBins = {11:15, 13:17, 6:10, 12:16, 1:5};
 timeBins = {11:15, 13:22, 1:10, 12:16, 1:10};
 for t = 1:size(trialTypo,2)
     timeRange = timeBins{t};
@@ -73,7 +74,6 @@ for t = 1:size(trialTypo,2)
 
             end
     end
-    %Type.(trialTypo2{t})(:,1) = mafdr(Type.(trialTypo2{t})(:,1),'BHFDR',true);
     for i = 1:size(All_PSTH.psthBinsValue.(trialTypo{t}).Cor,1)
         if Type.(trialTypo2{t})(i,1) < 0.05 & Type.(trialTypo2{t})(i,2) > 0
             Type.(trialTypo2{t})(i,1) = 1;
@@ -150,7 +150,6 @@ for t = 1:size(trialTypo,2)
             [~,Chi_SD.pval.(trialTypo{t})(i),chi2stat_SD.(trialTypo{t}){i}] = fishertest(tbl_SD.(trialTypo{t}){i});
         end
     end
-    %Chi_SD.pval.(trialTypo{t}) = mafdr(Chi_SD.pval.(trialTypo{t}),'BHFDR',true);
 end
 for t = 1:size(trialTypo,2)
     Clust_ord = [1 0 -1];
@@ -165,5 +164,4 @@ for t = 1:size(trialTypo,2)
             [~,Chi_ITI.pval.(trialTypo{t})(i),chi2stat_ITI.(trialTypo{t}){i}] = fishertest(tbl_ITI.(trialTypo{t}){i});
         end
     end
-    %Chi_SD.pval.(trialTypo{t}) = mafdr(Chi_SD.pval.(trialTypo{t}),'BHFDR',true);
 end
