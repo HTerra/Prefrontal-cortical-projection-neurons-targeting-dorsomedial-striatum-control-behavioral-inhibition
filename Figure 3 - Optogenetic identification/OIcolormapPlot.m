@@ -1,4 +1,4 @@
-% Collects all OI spike times and plots them in colormap
+% Collects all OI spike times and plots them in colormap for Figure 3C
 
 n = 1;
 bins_ITI = [];
