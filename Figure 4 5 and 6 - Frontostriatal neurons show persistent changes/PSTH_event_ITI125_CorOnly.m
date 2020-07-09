@@ -4,12 +4,6 @@ function [psthBinsValue, PSTH, TrialDistr] = PSTH_event_CorOnly(All, neuronIndex
 % Figure 4A, 4B, 4C and 4D
 % Figure S1
 
-% V1.0
-% h.terra@vu.nl
-% May 16th 2019 
-%
-%
-
 
 [Correct, Incorrect, Omission, TrialDistr.Premature, Perserverative, nrTrialsStage, Perf]  = CC_ephys_var_ITI_SD_TTL_Master(10,1,All{5, 1}{neuron, 2});   
 if strcmp(event,'All')
