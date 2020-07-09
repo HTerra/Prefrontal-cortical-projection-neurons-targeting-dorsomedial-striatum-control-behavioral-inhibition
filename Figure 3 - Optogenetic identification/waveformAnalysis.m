@@ -3,54 +3,35 @@ function p = waveformAnalysis(All, parameters_OI, neuronIndex, IntIxVAR_ITI, Int
 %% Plots Figure 3B
 
 figure
-%subplot(1,2,1)
 for cluster2 = [IntIxVAR_ITI IntIxVAR_SD]
         scatter(All{15,1}(cluster2,5), All{15,1}(cluster2,6),10,'b','filled')
         hold on
-%         if All{15,1}(cluster2,5) > 0.4 || All{15,1}(cluster2,5) < 0.1 || All{15,1}(cluster2,6) > 1.2
-%             display(cluster2)
-%         end
 end
 for cluster2 = [PyrIxVAR_ITI PyrIxVAR_SD]
     scatter(All{15,1}(cluster2,5), All{15,1}(cluster2,6),10,'r','filled')
     hold on
-%         if All{15,1}(cluster2,5) > 0.4 || All{15,1}(cluster2,5) < 0.1 || All{15,1}(cluster2,6) > 1.2
-%             display(cluster2)
-%         end
 end
 for cluster2 = [OIPyrIx_VAR_ITI OIPyrIx_VAR_SD]
         scatter(All{15,1}(cluster2,5), All{15,1}(cluster2,6),10,'r','filled')
         hold on
-%         if All{15,1}(cluster2,5) > 0.4 || All{15,1}(cluster2,5) < 0.1 || All{15,1}(cluster2,6) > 1.2
-%             display(cluster2)
-%         end
 end
 for cluster2 = [OIIntIxVAR_ITI OIIntIxVAR_SD]
         scatter(All{15,1}(cluster2,5), All{15,1}(cluster2,6),10,'b','filled')
         hold on
-%         if All{15,1}(cluster2,5) > 0.4 || All{15,1}(cluster2,5) < 0.1 || All{15,1}(cluster2,6) > 1.2
-%             display(cluster2)
-%         end
 end
 for cluster2 = [OIIntIxVAR_ITI OIIntIxVAR_SD]
         scatter(All{15,1}(cluster2,5), All{15,1}(cluster2,6),10,'b','filled')
         hold on
-%         if All{15,1}(cluster2,5) > 0.4 || All{15,1}(cluster2,5) < 0.1 || All{15,1}(cluster2,6) > 1.2
-%             display(cluster2)
-%         end
 end
 for cluster2 = find(All{23, 1}==3)
         scatter(All{15,1}(cluster2,5), All{15,1}(cluster2,6),10,'k','filled')
         hold on
-%         if All{15,1}(cluster2,5) > 0.4 || All{15,1}(cluster2,5) < 0.1 || All{15,1}(cluster2,6) > 1.2
-%             display(cluster2)
-%         end
 end
-%axis([0 0.5 0 1.2])
 xlabel('Half peak width (ms)')
 ylabel('Peak-Valley width (ms)')
 zlabel('Mean firing Rate (Hz)')
 
+%% Other plots
 
 % subplot(1,2,2)
 % for cluster2 = [IntIxVAR_ITI IntIxVAR_SD]
