@@ -1,14 +1,9 @@
 function OIinfo = Lat_Jit_Rel_rangePlot(All, neuronIndex, parameters_OI)
 
-% Function looks for OI neurons with sessions with 10 laser protocols as these were the
-% ones that had different laser intensity protocols. It chooses neurons
+% Function looks for OI neurons with sessions with 10 laser protocols with decreasing laser intensity. It chooses neurons
 % that have more than one good OI protocol and has a very high chance of
-% being identified based on very short lat, jit and Rel. Then plots these
-% in boxplots to show spread of responses and returns a matrix with OI
-% values and which neurons it belongs to.
-
-% Define criteria for perfect OI neurons that must be present in OI session
-
+% being identified based on very short lat, jit and Rel. Then plots the the latency, jitter and reliability for the maximal light vs. minimal light intensity where it was identified.
+% Can be used to define your thresholds for optogenetic identification criteria
 
 % Collect SALT info on sessions and laser protocols in sessions and store
 % in matrix.
@@ -43,15 +38,6 @@ if size(All{1, 1}{n, 1},1) == 10 && numel(find(ismember(n,neuronIndex.PyrIx_OI))
 end
 end
 
-% manually remove 2 or 5 ms power if deviating from rest
-% OIinfo([10 18 26 33 41 49 58],:) = [];
-% OIinfo(10,7) = 3;
-% OIinfo(17,7) = 4;
-% OIinfo(24,7) = 5;
-% OIinfo(30,7) = 6;
-% OIinfo(44,7) = 8;
-% OIinfo(52,7) = 9;
-
 OIinfo([1 5 10 18 26 33 41 49],:) = [];
 OIinfo(1,7) = 1;
 OIinfo(4,7) = 2;
@@ -68,17 +54,8 @@ for i=1:10
     Ix_last = find(OIinfo(:,8)==i);
     Ix_first = find(OIinfo(:,7)==i);
     Lat(i,1:2) = OIinfo([Ix_first,Ix_last],4);
-%     Lat(i,4) = 1;
-%     Lat(i,5) = Lat(i,2)/Lat(i,1);
-%     Lat(i,6) = Lat(i,3)/Lat(i,1);
     Jit(i,1:2) = OIinfo([Ix_first,Ix_last],5);
-%         Jit(i,4) = 1;
-%     Jit(i,5) = Jit(i,2)/Jit(i,1);
-%     Jit(i,6) = Jit(i,3)/Jit(i,1);
     Rel(i,1:2) = OIinfo([Ix_first,Ix_last],6);
-%         Rel(i,4) = 1;
-%     Rel(i,5) = Rel(i,2)/Rel(i,1);
-%     Rel(i,6) = Rel(i,3)/Rel(i,1);
     n = n+1;
 end
 
@@ -136,17 +113,8 @@ for i=1:OIinfo(end,9)
     Ix_last = find(OIinfo(:,8)==i);
     Ix_first = find(OIinfo(:,7)==i);
     Lat(i,1:2) = OIinfo([Ix_first,Ix_last],4);
-%     Lat(i,4) = 1;
-%     Lat(i,5) = Lat(i,2)/Lat(i,1);
-%     Lat(i,6) = Lat(i,3)/Lat(i,1);
     Jit(i,1:2) = OIinfo([Ix_first,Ix_last],5);
-%         Jit(i,4) = 1;
-%     Jit(i,5) = Jit(i,2)/Jit(i,1);
-%     Jit(i,6) = Jit(i,3)/Jit(i,1);
     Rel(i,1:2) = OIinfo([Ix_first,Ix_last],6);
-%         Rel(i,4) = 1;
-%     Rel(i,5) = Rel(i,2)/Rel(i,1);
-%     Rel(i,6) = Rel(i,3)/Rel(i,1);
     n = n+1;
 end
 
