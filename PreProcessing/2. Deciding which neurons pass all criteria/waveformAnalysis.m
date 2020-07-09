@@ -1,6 +1,7 @@
 function p = waveformAnalysis(All, parameters_OI, neuronIndex, IntIxVAR_ITI, IntIxVAR_SD, PyrIxVAR_ITI, PyrIxVAR_SD, OIPyrIx_VAR_ITI, OIPyrIx_VAR_SD, OIIntIxVAR_ITI, OIIntIxVAR_SD)
 
-%% Plot
+
+%% Plot's Figure 3B
 
 figure
 %subplot(1,2,1)
@@ -51,6 +52,7 @@ xlabel('Half peak width (ms)')
 ylabel('Peak-Valley width (ms)')
 zlabel('Mean firing Rate (Hz)')
 
+%%
 
 % subplot(1,2,2)
 % for cluster2 = [IntIxVAR_ITI IntIxVAR_SD]
