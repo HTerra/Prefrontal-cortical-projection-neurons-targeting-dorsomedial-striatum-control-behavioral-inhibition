@@ -132,6 +132,7 @@ ITI_All_clust.TS = ClustType_All';
 ITI_All_clust.TH = ClustType_All';
 ITI_All_clust.Resp_bef = ClustType_All';
 
+%% Figure 6C
 figure
 bar([numel(find(ITI_All_clust.TS(VAR_ITIixOIMatched,1)==1))/numel(VAR_ITIixOIMatched) numel(find(ITI_OI_clust.TS==1))/numel(ITI_OI_clust.TS); numel(find(ITI_All_clust.TS(VAR_ITIixOIMatched,1)==0))/numel(VAR_ITIixOIMatched) numel(find(ITI_OI_clust.TS==0))/numel(ITI_OI_clust.TS); numel(find(ITI_All_clust.TS(VAR_ITIixOIMatched,1)==-1))/numel(VAR_ITIixOIMatched) numel(find(ITI_OI_clust.TS==-1))/numel(ITI_OI_clust.TS)]); 
 legend({'Other', 'Frontostriatal'})
@@ -208,6 +209,8 @@ CorVsPremSign_Combined.OI_combined = [CorVsPremSign_Combined.OI.TH CorVsPremSign
 CorVsPremSign_Combined.OI_combined = mafdr([CorVsPremSign_Combined.OI.TH CorVsPremSign_Combined.OI.Resp_bef],'BHFDR',true);
 CorVsPremSign_Combined.OI.TH = CorVsPremSign_Combined.OI_combined(1);
 CorVsPremSign_Combined.OI.Resp_bef = CorVsPremSign_Combined.OI_combined(2);
+
+%% Figure 7C
 figure
 subplot(1,3,1)
 hold on
@@ -231,6 +234,7 @@ boxplot([CorVsPremSign_Combined2.OI.Resp_bef{1, 2}' CorVsPremSign_Combined2.OI.R
 ylabel('Absolute delta FR (Hz)')
 ylim([0 25])
 
+%%
 figure
 n = 1;
 pos = [1 2 3];
@@ -263,6 +267,8 @@ for t = [1 2 3]
         CorVsPremSign_Combined2.All.(trialTypo2{t}){3} = abs(PremFR.All.(trialTypo2{t})(find(ITI_All_clust.(trialTypo2{t})(VAR_ITIixOIMatched)'~=ClustUpMidDown(2))));
 end
 CorVsPremSign_Combined.All_combined = mafdr([CorVsPremSign_Combined.All.TH CorVsPremSign_Combined.All.Resp_bef],'BHFDR',true);
+
+%%
 figure
 subplot(1,3,1)
 hold on
@@ -316,10 +322,12 @@ I_zeroIxs = find(ClustType_OI==0);
 I_negIxs = find(ClustType_OI==-1);
 I = [I_oneIxs(I_one) I_zeroIxs(I_zero) I_negIxs(I_neg)];
 
+%% Figure 4H
 figure
 colormap('jet')
 imagesc(B_OI(ib_OI(I),1:3))
 
+%% Figure 4G
 figure
 subplot(1,3,1)
 colormap('jet')
@@ -348,7 +356,7 @@ ylabel('Neuron')
 caxis(axisRange)
 title('Response')
 
-% Plot Average PSTH per group
+%% Figure 4I
 figure
 subplot(1,3,1) 
 hold on
@@ -383,10 +391,12 @@ I_negIxs = find(ClustType_All(VAR_ITIixOIMatched)==-1);
 [B,I_neg] = sort(mean(All_PSTH.PSTH.Resp_bef.Cor(VAR_ITIixOIMatched(I_negIxs),1:5),2),'descend');
 I = [I_oneIxs(I_one) I_zeroIxs(I_zero) I_negIxs(I_neg)];
 
+%% Figure 6B
 figure
 colormap('jet')
 imagesc(B_All(ib_All(VAR_ITIixOIMatched(I)),1:3))
 
+%% Figure 6A
 figure
 subplot(1,3,1)
 colormap('jet')
@@ -414,70 +424,3 @@ axis([-2-(0.5*binSize) 2+(0.5*binSize) 0.5 size(All_PSTH.PSTH.Resp_bef.Cor(VAR_I
 ylabel('Neuron')
 caxis(axisRange)
 title('Response')
-
-%% Make plot that compares proportion of Cor vs Prem modualted units per sync point for OI and All
-
-Prop.TSMod_OI = numel(find(Sign.ITI_OI.TS<0.05))/(numel(Sign.ITI_OI.TS));
-Prop.THMod_OI  = numel(find(Sign.ITI_OI.TH<0.05))/(numel(Sign.ITI_OI.TH));
-Prop.Resp_befMod_OI  = numel(find(Sign.ITI_OI.Resp_bef<0.05))/(numel(Sign.ITI_OI.Resp_bef));
-Prop.TSMod_All = numel(find(Sign.ITI_All.TS<0.05))/(numel(Sign.ITI_All.TS));
-Prop.THMod_All  = numel(find(Sign.ITI_All.TH<0.05))/(numel(Sign.ITI_All.TH));
-Prop.Resp_befMod_All  = numel(find(Sign.ITI_All.Resp_bef<0.05))/(numel(Sign.ITI_All.Resp_bef));
-figure
-bar([Prop.TSMod_OI Prop.TSMod_All;Prop.THMod_OI Prop.THMod_All; Prop.Resp_befMod_OI Prop.Resp_befMod_All])
-title('Proportion of Cor-Prem modulated neurons')
-legend({'Identified','other'})
-
-%% Get cue orientation times and cue orientation to response times
-allFiles = dir;
-
-n = 1;
-VAR_ITIix = [];
-VAR_SDix = [];
-for file = 1:size(allFiles,1)
-    if ~isempty(strfind(allFiles(file).name, 'txt'))
-        MED_PC{n,1} = allFiles(file).name;
-        n = n+1;
-    end
-end
-
-for i = 1:size(neuronIndex.PyrIx_VAR_ITI_OI,2)
-    recDate_ITI{i} = All{5,1}{neuronIndex.PyrIx_VAR_ITI_OI(i),2};
-end
-[Ix_ITI C_ITI IC_ITI] = unique(recDate_ITI);
-
-n = 1;
-for sessionITI = 1:size(C_ITI,1)
-    [ITI.Correct{n,1}, ITI.Incorrect{n,1}, ITI.Omission{n,1}, PrematureITI(n,1), ITI.Perserverative{n,1}, nrTrialsStageITI(n,1), Perf_ITI{n,1}]  = CC_ephys_var_ITI_SD_TTL_Master(10,1,recDate_ITI{C_ITI(sessionITI)});
-    n = n+1;
-end
-
-n = 2;
-TH_Time_prem{1} = ITI_OI.ITI125.TrialDist{1, 1}.PremTreshold;
-TH_Time_cor{1} = ITI_OI.ITI125.TrialDist{1, 1}.CorTreshold;
-for neuron = 2:size(C_ITI,1)
-    TH_Time_prem{n} = ITI_OI.ITI125.TrialDist{1, C_ITI(neuron)}.PremTreshold;
-    TH_Time_cor{n} = ITI_OI.ITI125.TrialDist{1, C_ITI(neuron)}.CorTreshold;
-    n = n+1;
-end
-
-% Get cue orientation times
-Lat_TH_prem = [];
-Lat_TH_cor = [];
-n = 1;
-for i = 1:size(TH_Time_prem,2)
-    Lat_TH_prem = [Lat_TH_prem; (TH_Time_prem{i})];
-    Lat_TH_cor = [Lat_TH_cor; (TH_Time_cor{i})];
-    n = n+1;
-end
-
-% Get cue orientation to response time
-Lat_THtoResp_prem = [];
-for i = 1:size(C_ITI,1)
-    Lat_THtoResp_prem = [Lat_THtoResp_prem (PrematureITI(i).LatencyITI125)];
-end
-
-Lat_THtoResp_cor = [];
-for neuron = 1:size(C_ITI,1)
-    Lat_THtoResp_cor = [Lat_THtoResp_cor (All{22, 1}{neuronIndex.PyrIx_VAR_ITI_OI(C_ITI(neuron)), 1}.corITI125Resp(ITI_OI.ITI125.TrialDist{1, C_ITI(neuron)}.CorTresholdIncluded)-All{22, 1}{neuronIndex.PyrIx_VAR_ITI_OI(C_ITI(neuron)), 1}.corITI125Cue(ITI_OI.ITI125.TrialDist{1, C_ITI(neuron)}.CorTresholdIncluded))+12.5];
-end
