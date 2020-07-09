@@ -210,21 +210,21 @@ subplot(1,3,1)
 hold on
 plot([abs(CorFR.OI.TS(find(SD_OI_clust.(trialTypo2{t})'==ClustUpMidDown(1)))); abs(OmFR.OI.TS(find(SD_OI_clust.(trialTypo2{t})'==ClustUpMidDown(1))))],'r');
 plot([abs(CorFR.OI.TS(find(SD_OI_clust.(trialTypo2{t})'==ClustUpMidDown(3)))); abs(OmFR.OI.TS(find(SD_OI_clust.(trialTypo2{t})'==ClustUpMidDown(3))))],'b');
-boxplot([CorVsOmSign_Combined2.OI.TS{1, 2}' CorVsOmSign_Combined2.OI.TS{1, 3}'],'Labels',{'Correct','Omature'})
+boxplot([CorVsOmSign_Combined2.OI.TS{1, 2}' CorVsOmSign_Combined2.OI.TS{1, 3}'],'Labels',{'Correct','Omission'})
 ylabel('Absolute delta FR (Hz)')
 ylim([0 20])
 subplot(1,3,2)
 hold on
 plot([abs(CorFR.OI.TH(find(SD_OI_clust.(trialTypo2{t})'==ClustUpMidDown(1)))); abs(OmFR.OI.TH(find(SD_OI_clust.(trialTypo2{t})'==ClustUpMidDown(1))))],'r');
 plot([abs(CorFR.OI.TH(find(SD_OI_clust.(trialTypo2{t})'==ClustUpMidDown(3)))); abs(OmFR.OI.TH(find(SD_OI_clust.(trialTypo2{t})'==ClustUpMidDown(3))))],'b');
-boxplot([CorVsOmSign_Combined2.OI.TH{1, 2}' CorVsOmSign_Combined2.OI.TH{1, 3}'],'Labels',{'Correct','Omature'})
+boxplot([CorVsOmSign_Combined2.OI.TH{1, 2}' CorVsOmSign_Combined2.OI.TH{1, 3}'],'Labels',{'Correct','Omission'})
 ylabel('Absolute delta FR (Hz)')
 ylim([0 20])
 subplot(1,3,3)
 hold on
 plot([abs(CorFR.OI.Cue(find(SD_OI_clust.(trialTypo2{t})'==ClustUpMidDown(1)))); abs(OmFR.OI.Cue(find(SD_OI_clust.(trialTypo2{t})'==ClustUpMidDown(1))))],'r');
 plot([abs(CorFR.OI.Cue(find(SD_OI_clust.(trialTypo2{t})'==ClustUpMidDown(3)))); abs(OmFR.OI.Cue(find(SD_OI_clust.(trialTypo2{t})'==ClustUpMidDown(3))))],'b');
-boxplot([CorVsOmSign_Combined2.OI.Cue{1, 2}' CorVsOmSign_Combined2.OI.Cue{1, 3}'],'Labels',{'Correct','Omature'})
+boxplot([CorVsOmSign_Combined2.OI.Cue{1, 2}' CorVsOmSign_Combined2.OI.Cue{1, 3}'],'Labels',{'Correct','Omission'})
 ylabel('Absolute delta FR (Hz)')
 ylim([0 20])
 
