@@ -7,7 +7,7 @@ function [psthBinsValue, PSTH, TrialDistr, bins] = PSTH_event_ITI_CorOnlyForFigu
 % h.terra@vu.nl
 % May 16th 2019 
 %
-%
+% Plots Figure 3D
 
 
    
