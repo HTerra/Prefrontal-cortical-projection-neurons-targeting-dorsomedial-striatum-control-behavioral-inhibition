@@ -1,6 +1,6 @@
 function p = waveformAnalysis(All, parameters_OI, neuronIndex, IntIxVAR_ITI, IntIxVAR_SD, PyrIxVAR_ITI, PyrIxVAR_SD, OIPyrIx_VAR_ITI, OIPyrIx_VAR_SD, OIIntIxVAR_ITI, OIIntIxVAR_SD)
 
-%% Plot
+%% Plots Figure 3B
 
 figure
 %subplot(1,2,1)
