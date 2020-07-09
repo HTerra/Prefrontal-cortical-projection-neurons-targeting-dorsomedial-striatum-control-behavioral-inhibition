@@ -1,4 +1,4 @@
-function [psthBinsValue, PSTH, TrialDistr] = PSTH_event_CorOnly(All, neuronIndex, parameters_OI, neuron, binSize, event, InfoDist,varargin)
+function [psthBinsValue, PSTH, TrialDistr] = PSTH_event_ITI_CorOnly(All, neuronIndex, parameters_OI, neuron, binSize, event, InfoDist,varargin)
 
 % Figure 3A
 % Figure 4A, 4B, 4C and 4D
