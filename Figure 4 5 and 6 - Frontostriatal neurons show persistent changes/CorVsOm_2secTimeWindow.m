@@ -3,7 +3,7 @@ function CorVsOm_2secTimeWindow(All,neuronIndex, SD_All, SD_OI, SDperiod)
 % Correct vs omission
 
 % 1st figure = Figure S2D
-% 4th figure = Figure S4D
+% 4th figure = Figure S4C
 % 7th figure = Figure 5E
 % 8th figure = Figure 5D
 % 9th figure = Figure 5F
