@@ -15,39 +15,38 @@ PSTHBinVal_All = [SD_All.All.psthBinsValue SD_OI.All.psthBinsValue ITI_All.(ITIp
 % Get baseline subtracted PETHs
 for n = 1:size(PSTH_All,2)
     try
-        All_PSTH.PSTH.TS.Cor(n,:) = (PSTH_All{1, n}.Cor.trial_start);%-mean(PSTH_All{1, n}.Cor.trial_start(1:10)));%/mean(std(PSTHBinVal_All{1, n}.Cor.trial_start(:,1:10),1),2);%max(abs(SD_OI.All.PSTH{1, n}.Cor.trial_start-mean(SD_OI.All.PSTH{1, n}.Cor.trial_start(1:5))));%,'gaussian',3)/SD_OI.All.ID{1, n}.Cor.TrialStart.Peak_real;
+        All_PSTH.PSTH.TS.Cor(n,:) = (PSTH_All{1, n}.Cor.trial_start);
     catch
          All_PSTH.PSTH.TS.Cor(n,:) = (PSTH_All{1, n}.Cor.trial_start(1:45));
     end
     try
-        All_PSTH.PSTH.TH.Cor(n,:) = (PSTH_All{1, n}.Cor.wait_start);%-mean(PSTH_All{1, n}.Cor.trial_start(1:10)));%/mean(std(PSTHBinVal_All{1, n}.Cor.trial_start(:,1:10),1),2);%max(abs(PSTH_SD_All.PSTH{1, n}.Cor.wait_start-mean(PSTH_SD_All.PSTH{1, n}.Cor.trial_start(1:5))));%,'gaussian',3)/PSTH_SD_All.ID{1, n}.Cor.Treshold.Peak_real;
+        All_PSTH.PSTH.TH.Cor(n,:) = (PSTH_All{1, n}.Cor.wait_start);
     catch
-        All_PSTH.PSTH.TH.Cor(n,:) = (PSTH_All{1, n}.Cor.wait_start(1:35));%
+        All_PSTH.PSTH.TH.Cor(n,:) = (PSTH_All{1, n}.Cor.wait_start(1:35));
     end
-    All_PSTH.PSTH.Resp.Cor(n,:) = (PSTH_All{1, n}.Cor.resp);%-mean(PSTH_All{1, n}.Cor.trial_start(1:10)));%/mean(std(PSTHBinVal_All{1, n}.Cor.trial_start(:,1:10),1),2);%max(abs(PSTH_SD_All.PSTH{1, n}.Cor.resp-mean(PSTH_SD_All.PSTH{1, n}.Cor.trial_start(1:5))));%,'gaussian',3)/PSTH_SD_All.ID{1, n}.Cor.Response.Peak_real;
+    All_PSTH.PSTH.Resp.Cor(n,:) = (PSTH_All{1, n}.Cor.resp);
     try
-        All_PSTH.PSTH.Cue.Cor(n,:) = (PSTH_All{1, n}.Cor.cue);%-mean(PSTH_All{1, n}.Cor.trial_start(1:10)));%/mean(std(PSTHBinVal_All{1, n}.Cor.trial_start(:,1:10),1),2);%max(abs(PSTH_SD_All.PSTH{1, n}.Cor.resp-mean(PSTH_SD_All.PSTH{1, n}.Cor.trial_start(1:5))));%,'gaussian',3)/PSTH_SD_All.ID{1, n}.Cor.Response.Peak_real;
+        All_PSTH.PSTH.Cue.Cor(n,:) = (PSTH_All{1, n}.Cor.cue);
     catch
-        All_PSTH.PSTH.Cue.Cor(n,:) = (PSTH_All{1, n}.Cor.trial_start(26:45));%-mean(PSTH_All{1, n}.Cor.trial_start(1:10)));%/mean(std(PSTHBinVal_All{1, n}.Cor.trial_start(:,1:10),1),2);%max(abs(PSTH_SD_All.PSTH{1, n}.Cor.resp-mean(PSTH_SD_All.PSTH{1, n}.Cor.trial_start(1:5))));%,'gaussian',3)/PSTH_SD_All.ID{1, n}.Cor.Response.Peak_real;
-    end
+        All_PSTH.PSTH.Cue.Cor(n,:) = (PSTH_All{1, n}.Cor.trial_start(26:45));
 end
 
 for n = 1:size(PSTH_All,2)
     try
-        All_PSTH.psthBinsValue.TS.Cor{n,:} = (PSTHBinVal_All{1, n}.Cor.trial_start);%/mean(std(PSTHBinVal_All{1, n}.Cor.trial_start(:,1:10),1),2);%max(abs(SD_OI.All.PSTH{1, n}.Cor.trial_start-mean(SD_OI.All.PSTH{1, n}.Cor.trial_start(1:5))));%,'gaussian',3)/SD_OI.All.ID{1, n}.Cor.TrialStart.Peak_real;
+        All_PSTH.psthBinsValue.TS.Cor{n,:} = (PSTHBinVal_All{1, n}.Cor.trial_start);
     catch
         All_PSTH.psthBinsValue.TS.Cor{n,:} = (PSTHBinVal_All{1, n}.Cor.trial_start(1:45));%
     end
     try
-        All_PSTH.psthBinsValue.TH.Cor{n,:} = (PSTHBinVal_All{1, n}.Cor.wait_start);%/mean(std(PSTHBinVal_All{1, n}.Cor.trial_start(:,1:10),1),2);%max(abs(PSTH_SD_All.PSTH{1, n}.Cor.wait_start-mean(PSTH_SD_All.PSTH{1, n}.Cor.trial_start(1:5))));%,'gaussian',3)/PSTH_SD_All.ID{1, n}.Cor.Treshold.Peak_real;
+        All_PSTH.psthBinsValue.TH.Cor{n,:} = (PSTHBinVal_All{1, n}.Cor.wait_start);
     catch
-        All_PSTH.psthBinsValue.TH.Cor{n,:} = (PSTHBinVal_All{1, n}.Cor.wait_start(1:35));%
+        All_PSTH.psthBinsValue.TH.Cor{n,:} = (PSTHBinVal_All{1, n}.Cor.wait_start(1:35));
     end
-        All_PSTH.psthBinsValue.Resp.Cor{n,:} = (PSTHBinVal_All{1, n}.Cor.resp);%/mean(std(PSTHBinVal_All{1, n}.Cor.trial_start(:,1:10),1),2);%max(abs(PSTH_SD_All.PSTH{1, n}.Cor.resp-mean(PSTH_SD_All.PSTH{1, n}.Cor.trial_start(1:5))));%,'gaussian',3)/PSTH_SD_All.ID{1, n}.Cor.Response.Peak_real;
+        All_PSTH.psthBinsValue.Resp.Cor{n,:} = (PSTHBinVal_All{1, n}.Cor.resp);1:5))));
     try
-        All_PSTH.psthBinsValue.Cue.Cor{n,:} = (PSTHBinVal_All{1, n}.Cor.cue);%/mean(std(PSTHBinVal_All{1, n}.Cor.trial_start(:,1:10),1),2);%max(abs(PSTH_SD_All.PSTH{1, n}.Cor.resp-mean(PSTH_SD_All.PSTH{1, n}.Cor.trial_start(1:5))));%,'gaussian',3)/PSTH_SD_All.ID{1, n}.Cor.Response.Peak_real;
+        All_PSTH.psthBinsValue.Cue.Cor{n,:} = (PSTHBinVal_All{1, n}.Cor.cue);
     catch
-        All_PSTH.psthBinsValue.Cue.Cor{n,:} = (PSTHBinVal_All{1, n}.Cor.trial_start(:,26:45));%/mean(std(PSTHBinVal_All{1, n}.Cor.trial_start(:,1:10),1),2);%max(abs(PSTH_SD_All.PSTH{1, n}.Cor.resp-mean(PSTH_SD_All.PSTH{1, n}.Cor.trial_start(1:5))));%,'gaussian',3)/PSTH_SD_All.ID{1, n}.Cor.Response.Peak_real;
+        All_PSTH.psthBinsValue.Cue.Cor{n,:} = (PSTHBinVal_All{1, n}.Cor.trial_start(:,26:45));
     end
 end
 
@@ -114,54 +113,4 @@ for t = 1:size(trialTypo,2)
     All{28,1}(neuronIndex.PyrIx_VAR_SD_OI,t+1) = SD_OI_clust.(trialTypo2{t});
     All{28,1}(neuronIndex.PyrIxVAR_SD,t+1) = SD_All_clust.(trialTypo2{t});
     All{28,2} ='twoSecWindow';
-end
-
-VAR_SDixOIMatched = [];
-for neuron = 1:numel(neuronIndex.PyrIxVAR_SD)
-    for i = neuronIndex.PyrIx_VAR_SD_OI
-        if strcmp(All{9, 1}{neuronIndex.PyrIxVAR_SD(neuron),1},All{9, 1}{i,1})
-            VAR_SDixOIMatched = [VAR_SDixOIMatched neuron];
-            break
-        else
-        end
-    end
-end
-VAR_ITIixOIMatched = [];
-for neuron = 1:numel(neuronIndex.PyrIxVAR_ITI)
-    for i = neuronIndex.PyrIx_VAR_ITI_OI
-        if strcmp(All{9, 1}{neuronIndex.PyrIxVAR_ITI(neuron),1},All{9, 1}{i,1})
-            VAR_ITIixOIMatched = [VAR_ITIixOIMatched neuron];
-            break
-        else
-        end
-    end
-end
-
-for t = 1:size(trialTypo,2)
-    Clust_ord = [1 0 -1];
-    tot_SD_OI = size(SD_OI_clust.(trialTypo{t}),1);
-    tot_SD_All = size(SD_All_clust.(trialTypo{t})(VAR_SDixOIMatched),1);
-    for i = 1:3
-        x = [zeros(tot_SD_OI,1); ones(tot_SD_All,1)]';
-        y = [zeros(numel(find(SD_OI_clust.(trialTypo{t}) == Clust_ord(i))),1); ones(tot_SD_OI-numel(find(SD_OI_clust.(trialTypo{t}) == Clust_ord(i))),1); zeros(numel(find(SD_All_clust.(trialTypo{t})(VAR_SDixOIMatched) == Clust_ord(i))),1); ones(tot_SD_All-numel(find(SD_All_clust.(trialTypo{t})(VAR_SDixOIMatched) == Clust_ord(i))),1)]';
-        [tbl_SD.(trialTypo{t}){i},chi2stat_SD.(trialTypo{t}){i},Chi_SD.pval.(trialTypo{t})(i)] = crosstab(x,y);
-        if numel(find(SD_OI_clust.(trialTypo{t}) == Clust_ord(i))) < 5 || numel(find(SD_All_clust.(trialTypo{t})(VAR_SDixOIMatched) == Clust_ord(i))) < 5
-            tbl_SD.(trialTypo{t}){i} = table([numel(find(SD_OI_clust.(trialTypo{t}) == Clust_ord(i)));tot_SD_OI-numel(find(SD_OI_clust.(trialTypo{t}) == Clust_ord(i)))],[numel(find(SD_All_clust.(trialTypo{t})(VAR_SDixOIMatched) == Clust_ord(i)));tot_SD_All-numel(find(SD_All_clust.(trialTypo{t})(VAR_SDixOIMatched) == Clust_ord(i)))],'VariableNames',{'Flu','NoFlu'},'RowNames',{'NoShot','Shot'});
-            [~,Chi_SD.pval.(trialTypo{t})(i),chi2stat_SD.(trialTypo{t}){i}] = fishertest(tbl_SD.(trialTypo{t}){i});
-        end
-    end
-end
-for t = 1:size(trialTypo,2)
-    Clust_ord = [1 0 -1];
-    tot_ITI_OI = size(ITI_OI_clust.(trialTypo{t}),1);
-    tot_ITI_All = size(ITI_All_clust.(trialTypo{t})(VAR_ITIixOIMatched),1);
-    for i = 1:3
-        x = [zeros(tot_ITI_OI,1); ones(tot_ITI_All,1)]';
-        y = [zeros(numel(find(ITI_OI_clust.(trialTypo{t}) == Clust_ord(i))),1); ones(tot_ITI_OI-numel(find(ITI_OI_clust.(trialTypo{t}) == Clust_ord(i))),1); zeros(numel(find(ITI_All_clust.(trialTypo{t})(VAR_ITIixOIMatched) == Clust_ord(i))),1); ones(tot_ITI_All-numel(find(ITI_All_clust.(trialTypo{t})(VAR_ITIixOIMatched) == Clust_ord(i))),1)]';
-        [tbl_ITI.(trialTypo{t}){i},chi2stat_ITI.(trialTypo{t}){i},Chi_ITI.pval.(trialTypo{t})(i)] = crosstab(x,y);
-        if numel(find(ITI_OI_clust.(trialTypo{t}) == Clust_ord(i))) < 5 || numel(find(ITI_All_clust.(trialTypo{t})(VAR_ITIixOIMatched) == Clust_ord(i))) < 5
-            tbl_ITI.(trialTypo{t}){i} = table([numel(find(ITI_OI_clust.(trialTypo{t}) == Clust_ord(i)));tot_ITI_OI-numel(find(ITI_OI_clust.(trialTypo{t}) == Clust_ord(i)))],[numel(find(ITI_All_clust.(trialTypo{t})(VAR_ITIixOIMatched) == Clust_ord(i)));tot_ITI_All-numel(find(ITI_All_clust.(trialTypo{t})(VAR_ITIixOIMatched) == Clust_ord(i)))],'VariableNames',{'Flu','NoFlu'},'RowNames',{'NoShot','Shot'});
-            [~,Chi_ITI.pval.(trialTypo{t})(i),chi2stat_ITI.(trialTypo{t}){i}] = fishertest(tbl_ITI.(trialTypo{t}){i});
-        end
-    end
 end
