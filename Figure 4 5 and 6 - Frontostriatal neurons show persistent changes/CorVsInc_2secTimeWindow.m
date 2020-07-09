@@ -1,6 +1,6 @@
 function CorVSinc_2secTimeWindow(All,neuronIndex, SD_All, SD_OI, SDperiod)
 
-% Makes Figure S4E
+% Makes Figure S4D
 
 binSize = 0.2;
 SDperiod = 'All';
