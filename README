@@ -1,12 +1,12 @@
-This repository contains Matlab scripts used in: 
+This repository contains Matlab scripts used in: Terra, Bruinsma et al. (2020). Prefrontal cortical projection neurons targeting dorsomedial striatum control behavioral inhibition. Current Biology
 
-These are build around making and using the following Matlab structs and cell arrays, which store all information required for plotting.
+These scripts were made for making and using the following Matlab structs and cell arrays, which store all information required for plotting.
 1. All - This 'master' cell array contains most information about neurons (i.e. recording location, neuron number, shank, peak waveofrm channel, optogenetic identification etc.)
 2. neuronIndex - This struct contains the indexes of different neuron types (i.e. all broad-spiking identified neurons etc.) that can be used to quickly sample a subset of neurons
 3. parameters_OI - contains the criteria required for a neuron to be optogenetically identified
 4. ITI_All and ITI_OI - These structs contain the information needed to make PETHs for non-identified neurons (_All) and identified neurons (_OI) in inhibitory control (variable delay) sessions
 5. SD_All and SD_OI - Similar as ITI_ALL and ITI_OI but for attention (variable stimulus duration) sessions.
 
-You also need the raw behavior output files (MED PC, .mpc).
+You also need the behavioral output files (MED PC, .mpc).
 
-h.terra [at] gmail.com
+For questions please contact: h.terra [at] gmail.com
